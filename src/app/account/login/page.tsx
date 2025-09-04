@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import cafee from "@/app/image/2f256901cac6991091fe934ee7de3bf4773bf892.jpg";
 import InputRadius from "@/app/component/InputRadius";
@@ -26,11 +27,14 @@ export default function Login() {
           </div>
 
           <div className="flex justify-between text-sm text-[#D9CEBC] mb-10">
-            <Link href={"/pages/forgotpassword"}>Quên mật khẩu</Link>
-            <Link href={"/pages/signup"}>Đăng Ký</Link>
+            <Link href={"/account/forgotpassword"}>Quên mật khẩu</Link>
+            <Link href={"/account/signup"}>Đăng Ký</Link>
           </div>
 
-          <Button name="Đăng Nhập" />
+          <Button
+            name="Đăng Nhập"
+            onclick={() => alert("Danh nhap thanh cong")}
+          />
         </div>
       </div>
     </div>

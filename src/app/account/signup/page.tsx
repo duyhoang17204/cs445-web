@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import cafee from "@/app/image/2f256901cac6991091fe934ee7de3bf4773bf892.jpg";
 import InputRadius from "@/app/component/InputRadius";
@@ -20,7 +21,7 @@ export default function SignUp() {
         <div className="flex flex-col max-w-[540px] h-full w-full bg-[#5B3B0E] p-10">
           <div className="text-center mb-8">
             <Title name="Đăng Kí" />
-            <Link href={"/pages/login"}>Bạn đã có tài khoản? Đăng nhập</Link>
+            <Link href={"/account/login"}>Bạn đã có tài khoản? Đăng nhập</Link>
           </div>
 
           <div className="space-y-4 mb-6">
@@ -33,7 +34,7 @@ export default function SignUp() {
             />
           </div>
 
-          <Button name="Đăng Kí" />
+          <Button name="Đăng Kí" onclick={() => alert("Dang ki thanh cong")} />
         </div>
       </div>
     </div>

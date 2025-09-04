@@ -19,7 +19,10 @@ export default function ForgotPassword() {
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Button name="Gửi lại mật khẩu" />
+          <Button
+            name="Gửi lại mật khẩu"
+            onclick={() => alert("Cho gui mat khau gui den email cua ban")}
+          />
         </div>
       </div>
     </div>
