@@ -13,7 +13,7 @@ export default function Profile() {
   };
 
   const handleChangePW = () => {
-    router.push("/pages/changepassword");
+    router.push("/account/changepassword");
   };
 
   return (

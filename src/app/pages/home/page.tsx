@@ -1,6 +1,5 @@
 "use client";
-import Navbar from "@/app/component/NavBar";
-import Footer from "@/app/component/Footer";
+
 import Image from "next/image";
 import banner from "@/app/image/banner.png";
 import about1 from "@/app/image/about1.png";
@@ -21,9 +20,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#D9CEBC] text-[#5B3B0E] pb-5">
-      <Navbar />
-
-      <div className="w-full h-[480px] relative">
+      <div className="w-full h-[600px] relative">
         <Image src={banner} alt="Cafe Banner" fill className="object-cover " />
       </div>
 
@@ -70,7 +67,10 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto ">
           <div className="flex flex-col items-center mb-5">
             <h2 className="text-center text-[45px] font-normal  m-0">Menu</h2>
-            <button className="bg-[#D9CEBC] text-[#5B3B0E]  text-2xl px-4 py-2 rounded-[50px] hover:opacity-90 transition">
+            <button
+              className="bg-[#D9CEBC] text-[#5B3B0E]  text-2xl px-4 py-2 rounded-[50px] hover:opacity-90 transition"
+              onClick={() => router.push("/pages/menu")}
+            >
               See more
             </button>
           </div>
@@ -83,8 +83,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

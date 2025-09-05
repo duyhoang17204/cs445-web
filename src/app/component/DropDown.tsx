@@ -35,19 +35,19 @@ export default function UserDropdown() {
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg p-2 z-50">
           <Link
-            href="/pages/login"
+            href="/account/login"
             className="block px-4 py-2 hover:bg-gray-100"
           >
             Login
           </Link>
           <Link
-            href="/pages/signup"
+            href="/account/signup"
             className="block px-4 py-2 hover:bg-gray-100"
           >
             Sign in
           </Link>
           <Link
-            href="/pages/profile"
+            href="/account/profile"
             className="block px-4 py-2 hover:bg-gray-100"
           >
             Profile

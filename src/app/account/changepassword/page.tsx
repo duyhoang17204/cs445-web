@@ -29,7 +29,7 @@ export default function ChangePassword() {
             name=" Xác nhận thay đổi"
           />
           <Button
-            onclick={() => router.push("/pages/profile")}
+            onclick={() => router.push("/account/profile")}
             name=" Quay lại Profile"
           />
         </div>
