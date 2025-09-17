@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const menus = [
-    // Best seller
+  const menu = [
+    
     {
       id: 1,
       name: "Orange Coldbrew",
@@ -188,5 +188,5 @@ export async function GET() {
     },
   ];
 
-  return NextResponse.json({ menus });
+  return NextResponse.json({ menu });
 }
