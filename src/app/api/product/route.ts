@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const product = [
-    // batch 1 - ly.png
+  
     { id: 1, name: "Ly giữ nhiệt 750ml đen", price: "350.000 VNĐ", image: "/images/ly.png" },
     { id: 2, name: "Ly sứ (9×8cm)", price: "190.000 VNĐ", image: "/images/ly.png" },
     { id: 3, name: "Phin cà phê", price: "180.000 VNĐ", image: "/images/ly.png" },
@@ -13,7 +13,7 @@ export async function GET() {
     { id: 8, name: "SÔNG HƯƠNG ARABICA", price: "235.000 VNĐ", image: "/images/ly.png" },
     { id: 9, name: "FINE ROBUSTA", price: "195.000 VNĐ", image: "/images/ly.png" },
 
-    // batch 2 - ao.png
+  
     { id: 10, name: "Ly giữ nhiệt 750ml đen", price: "350.000 VNĐ", image: "/images/ao.png" },
     { id: 11, name: "Ly sứ (9×8cm)", price: "190.000 VNĐ", image: "/images/ao.png" },
     { id: 12, name: "Phin cà phê", price: "180.000 VNĐ", image: "/images/ao.png" },
@@ -24,7 +24,7 @@ export async function GET() {
     { id: 17, name: "SÔNG HƯƠNG ARABICA", price: "235.000 VNĐ", image: "/images/ao.png" },
     { id: 18, name: "FINE ROBUSTA", price: "195.000 VNĐ", image: "/images/ao.png" },
 
-    // batch 3 - (bạn để thiếu ảnh, "/images/.png")
+  
     { id: 19, name: "Ly giữ nhiệt 750ml đen", price: "350.000 VNĐ", image: "/images/khan.png" },
     { id: 20, name: "Ly sứ (9×8cm)", price: "190.000 VNĐ", image: "/images/khan.png" },
     { id: 21, name: "Phin cà phê", price: "180.000 VNĐ", image: "/images/khan.png" },
@@ -35,7 +35,7 @@ export async function GET() {
     { id: 26, name: "SÔNG HƯƠNG ARABICA", price: "235.000 VNĐ", image: "/images/khan.png" },
     { id: 27, name: "FINE ROBUSTA", price: "195.000 VNĐ", image: "/images/khan.png" },
 
-    // batch 4 - nenthom.png
+  
     { id: 28, name: "Ly giữ nhiệt 750ml đen", price: "350.000 VNĐ", image: "/images/nenthom.png" },
     { id: 29, name: "Ly sứ (9×8cm)", price: "190.000 VNĐ", image: "/images/nenthom.png" },
     { id: 30, name: "Phin cà phê", price: "180.000 VNĐ", image: "/images/nenthom.png" },
