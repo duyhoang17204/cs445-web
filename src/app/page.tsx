@@ -1,11 +1,14 @@
-import Image from "next/image";
-
 import HomePage from "@/app/pages/home/page";
+import PagesLayout from "./pages/layout";
 
-export default function Home() {
+const Home = () => {
   return (
     <div>
-      <HomePage />
+      <PagesLayout>
+        <HomePage />
+      </PagesLayout>
     </div>
   );
-}
+};
+
+export default Home;
