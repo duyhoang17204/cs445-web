@@ -6,6 +6,7 @@ const Home = () => {
     <div>
       <PagesLayout>
         <HomePage />
+        <div></div>
       </PagesLayout>
     </div>
   );
