@@ -1,12 +1,9 @@
-import HomePage from "@/app/pages/home/page";
-import PagesLayout from "./pages/layout";
+import Login from "./account/login/page";
 
 const Home = () => {
   return (
     <div>
-      <PagesLayout>
-        <HomePage />
-      </PagesLayout>
+      <Login />
     </div>
   );
 };
