@@ -4,7 +4,6 @@ import HeaderAdmin from "../components/header";
 import FormField from "@/app/component/form-field";
 import ProductService from "@/app/api/products";
 import { Dropdown } from "primereact/dropdown";
-import { formatLocalTime } from "../../../../utils/common";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -132,7 +131,7 @@ const Page = () => {
                     {item.role}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
-                    {item.createdAt && formatLocalTime(item.createdAt)}
+                    {/* {item.createdAt && formatLocalTime(item.createdAt)} */}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
                     {item.status}

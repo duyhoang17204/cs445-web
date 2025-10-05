@@ -27,3 +27,7 @@ export const isValidEmail = (value: string, errorMessage = "Invalid email") => {
 
   return null;
 };
+
+export const formatLocalTime = (data: any, locale = "vi") => {
+  return new Date(data).toLocaleString(locale);
+};
