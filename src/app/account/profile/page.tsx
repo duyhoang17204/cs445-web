@@ -20,7 +20,11 @@ export default function Profile() {
     <div className="flex items-center justify-center min-h-screen bg-[#D9CEBC]">
       <div className="w-full max-w-[500px] bg-white rounded-3xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <Title name="Thông Tin Cá Nhân" />
+          <div className="text-center mb-8">
+            <div className="text-3xl text-[#9d6b2a] my-2">
+              Thông Tin Cá Nhân
+            </div>
+          </div>
           <p className="text-gray-500 text-sm">
             Quản lý và cập nhật tài khoản của bạn
           </p>
