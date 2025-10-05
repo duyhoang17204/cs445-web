@@ -131,7 +131,7 @@ const Page = () => {
                     {item.role}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
-                    {/* {item.createdAt && formatLocalTime(item.createdAt)} */}
+                    {item.createdAt && formatLocalTime(item.createdAt)}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
                     {item.status}
