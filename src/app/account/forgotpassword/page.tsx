@@ -8,7 +8,9 @@ export default function ForgotPassword() {
     <div className="w-full min-h-screen flex items-center justify-center bg-[#D9CEBC] px-4">
       <div className="w-full max-w-[500px] bg-white rounded-3xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <Title name="Quên Mật Khẩu" />
+          <div className="text-center mb-8">
+            <div className="text-3xl text-[#9d6b2a] my-2">Quên Mật Khẩu</div>
+          </div>
           <p className="text-gray-600 text-sm">
             Nhập email để nhận lại mật khẩu của bạn
           </p>

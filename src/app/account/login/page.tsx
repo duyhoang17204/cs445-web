@@ -66,7 +66,9 @@ const Login = () => {
         </div>
 
         <div className="flex flex-col max-w-[516px] h-full w-full bg-[#5B3B0E] shadow-xl p-8">
-          <Title name="Đăng Nhập" />
+          <div className="text-center mb-8">
+            <div className="text-3xl text-white my-2">Đăng Nhập</div>
+          </div>
 
           <div className="space-y-4 mb-4">
             <FormField

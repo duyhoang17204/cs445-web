@@ -11,7 +11,11 @@ export default function ChangePassword() {
     <div className="flex items-center justify-center min-h-screen bg-[#D9CEBC]">
       <div className="w-full max-w-[500px] bg-white rounded-3xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <Title name="Thay Đổi Mật Khẩu" />
+          <div className="text-center mb-8">
+            <div className="text-3xl text-[#9d6b2a] my-2">
+              Thay Đổi Mật Khẩu
+            </div>
+          </div>
           <p className="text-gray-500 text-sm">
             Vui lòng nhập mật khẩu hiện tại và mật khẩu mới
           </p>

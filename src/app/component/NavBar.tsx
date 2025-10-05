@@ -1,14 +1,16 @@
 "use client";
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import cart from "@/app/image/cart.png";
+import CartIcon from "@/app/image/cart.png";
 import { usePathname } from "next/navigation";
-
+import Cart from "@/app/component/cart";
 import UserDropdown from "@/app/component/DropDown";
 
 export default function NavBar() {
   const pathname = usePathname();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [
     { name: "Home", href: "/pages/home" },
@@ -19,8 +21,18 @@ export default function NavBar() {
     { name: "Evaluate", href: "/pages/reviews" },
   ];
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsCartOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <nav className="w-full bg-[#D9CEBC] px-20 py-6 flex justify-between items-center shadow-md">
+    <nav className="relative w-full bg-[#D9CEBC] px-20 py-6 flex justify-between items-center shadow-md">
       <div className="text-[#5B3B0E] text-5xl font-extrabold">Tan.</div>
 
       <ul className="hidden md:flex items-center justify-between gap-10 text-2xl max-w-[1066px] w-full bg-[#5B3B0E] h-[88px] rounded-[50px] px-10">
@@ -45,14 +57,21 @@ export default function NavBar() {
         })}
       </ul>
 
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-8 relative" ref={cartRef}>
         <Image
-          src={cart}
+          src={CartIcon}
           alt="cart"
           width={50}
           height={50}
           className="cursor-pointer"
+          onClick={() => setIsCartOpen((prev) => !prev)}
         />
+
+        {isCartOpen && (
+          <div className="absolute top-[92px] right-0">
+            <Cart onClose={() => setIsCartOpen(false)} />
+          </div>
+        )}
 
         <div className="mt-2">
           <UserDropdown />
