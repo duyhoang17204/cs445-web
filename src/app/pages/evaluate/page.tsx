@@ -1,19 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Star, Image as ImageIcon, Send } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import ReviewService from "@/app/api/reviews";
+import useAppContext from "@/hook/use-context";
 
-export default function ReviewPage() {
+interface Review {
+  _id?: string;
+  user?: string;
+  rating: number;
+  comment: string;
+  images?: string[];
+  createdAt?: string;
+}
+
+export default function ReviewPage({ productId = "demo-product-id" }) {
   const [filter, setFilter] = useState("Liên quan nhất");
   const [showForm, setShowForm] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { auth } = useAppContext();
 
   const filters = ["Liên quan nhất", "Mới nhất", "Cao nhất", "Thấp nhất"];
+
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const res = (await ReviewService.getAll(productId)) as {
+        averageRating: number;
+        count: number;
+        reviews: Review[];
+      };
+      setReviews(res.reviews || []);
+    } catch (err) {
+      console.error("Lỗi khi tải đánh giá:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, [productId]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -24,24 +58,56 @@ export default function ReviewPage() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Đánh giá:", { rating, comment, images });
-    setShowForm(false);
-    setRating(0);
-    setComment("");
-    setImages([]);
+  const handleSubmit = async () => {
+    if (!rating || !comment.trim()) {
+      alert("Vui lòng nhập đầy đủ nội dung và số sao.");
+      return;
+    }
+
+    const payload = {
+      user: auth?.email || "Ẩn danh",
+      rating,
+      comment,
+      images,
+      product_id: productId || "demo-product-id",
+    };
+
+    try {
+      await ReviewService.create(payload);
+      await fetchReviews();
+      setShowForm(false);
+      setRating(0);
+      setComment("");
+      setImages([]);
+    } catch (err) {
+      console.error("Lỗi khi gửi đánh giá:", err);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await ReviewService.deleted(id);
+      setReviews(reviews.filter((r) => r._id !== id));
+    } catch (err) {
+      console.error("Lỗi khi xóa review:", err);
+    }
+  };
+
+  const handleEdit = (r: Review) => {
+    setComment(r.comment || "");
+    setRating(r.rating || 0);
+    setImages(r.images || []);
+    setShowForm(true);
   };
 
   return (
     <div className="min-h-screen bg-[#f6f0e6] text-[#5a3b10] flex flex-col items-center py-10">
-      {/* Header */}
       <div className="w-full max-w-4xl bg-[#e9dfd0] py-6 rounded-t-2xl text-center">
         <h1 className="text-2xl font-semibold">
           Đánh giá dịch vụ của <span className="font-bold">Tan.</span>
         </h1>
       </div>
 
-      {/* Summary */}
       <div className="w-full max-w-4xl bg-[#fdf6ec] p-6 rounded-b-2xl shadow-sm">
         <div className="text-center flex flex-row justify-between items-center">
           <div>
@@ -79,7 +145,7 @@ export default function ReviewPage() {
                 />
               ))}
             </div>
-            <p className="text-sm text-gray-600">251 đánh giá</p>
+            <p className="text-sm text-gray-600">{reviews.length} đánh giá</p>
           </div>
         </div>
       </div>
@@ -112,16 +178,14 @@ export default function ReviewPage() {
             {rating > 0 && <span className="text-sm ml-2">{rating} sao</span>}
           </div>
 
-          {/* Bình luận */}
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Nhập đánh giá của bạn..."
             className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#a3722d]"
             rows={4}
-          ></textarea>
+          />
 
-          {/* Upload ảnh */}
           <div className="flex items-center justify-between mt-3">
             <label className="flex items-center gap-2 text-[#a3722d] cursor-pointer">
               <ImageIcon className="w-5 h-5" />
@@ -131,7 +195,14 @@ export default function ReviewPage() {
                 accept="image/*"
                 multiple
                 className="hidden"
-                onChange={handleImageChange}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    const filesArray = Array.from(e.target.files).map((f) =>
+                      URL.createObjectURL(f)
+                    );
+                    setImages((prev) => [...prev, ...filesArray]);
+                  }
+                }}
               />
             </label>
 
@@ -145,13 +216,16 @@ export default function ReviewPage() {
 
           {images.length > 0 && (
             <div className="flex gap-3 mt-4 flex-wrap">
-              {images.map((src, index) => (
-                <div key={index} className="relative w-20 h-20">
+              {images.map((src, idx) => (
+                <div
+                  key={idx}
+                  className="relative w-28 h-28 overflow-hidden rounded-lg"
+                >
                   <Image
                     src={src}
-                    alt={`upload-${index}`}
+                    alt={`review-${idx}`}
                     fill
-                    className="object-cover rounded-lg"
+                    className="object-cover"
                   />
                 </div>
               ))}
@@ -179,51 +253,82 @@ export default function ReviewPage() {
           ))}
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-[#f6f0e6] p-4 rounded-xl shadow-sm">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-[#a3722d] rounded-full"></div>
-              <div>
-                <p className="font-semibold">Tiên Nguyễn</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="h-4 w-4 fill-[#a3722d] text-[#a3722d]"
-                />
-              ))}
-            </div>
-            <p className="text-sm mb-3">
-              Túi siêu thơm, sớp tư vấn nhiệt tình hẹ hẹ hẹ
-            </p>
-            <div className="flex gap-3">
-              <div className="relative w-28 h-28">
-                <Image
-                  src="/bag1.jpg"
-                  alt="Bag 1"
-                  fill
-                  className="object-cover rounded-lg"
-                />
-              </div>
-              <div className="relative w-28 h-28">
-                <Image
-                  src="/bag2.jpg"
-                  alt="Bag 2"
-                  fill
-                  className="object-cover rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        {loading ? (
+          <p className="text-center text-gray-500">Đang tải đánh giá...</p>
+        ) : reviews.length === 0 ? (
+          <p className="text-center text-gray-500">Chưa có đánh giá nào.</p>
+        ) : (
+          <div className="space-y-6">
+            {reviews.map((r) => (
+              <div
+                key={r._id}
+                className="bg-[#f6f0e6] p-4 rounded-xl shadow-sm"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-[#a3722d] rounded-full flex items-center justify-center text-white">
+                    {r.user?.charAt(0) || "U"}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{r?.user || "Ẩn danh"}</p>
+                    <p className="text-xs text-gray-500">
+                      {r.createdAt
+                        ? new Date(r.createdAt).toLocaleDateString()
+                        : ""}
+                    </p>
+                  </div>
+                </div>
 
-        <div className="text-center mt-8">
-          <Button className="bg-[#a3722d] text-white rounded-full px-6 hover:bg-[#8b6124]">
-            Xem tiếp...
-          </Button>
-        </div>
+                <div className="flex items-center gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < r.rating
+                          ? "fill-[#a3722d] text-[#a3722d]"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <p className="text-sm mb-3">{r.comment}</p>
+
+                {r.images && r.images.length > 0 && (
+                  <div className="flex gap-3">
+                    {r.images.map((img, idx) => (
+                      <div
+                        key={idx}
+                        className="relative w-28 h-28 overflow-hidden rounded-lg"
+                      >
+                        <Image
+                          src={img}
+                          alt={`review-${idx}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* <div className="flex gap-2 mt-3">
+                  <Button
+                    onClick={() => handleEdit(r)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded-full"
+                  >
+                    Sửa
+                  </Button>
+                  <Button
+                    onClick={() => r._id && handleDelete(r._id)}
+                    className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded-full"
+                  >
+                    Xóa
+                  </Button>
+                </div> */}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

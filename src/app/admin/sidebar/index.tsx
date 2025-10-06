@@ -7,6 +7,8 @@ const menuItems = [
   { name: "Sản Phẩm", href: "/admin/products" },
   { name: "Danh mục", href: "/admin/categories" },
   { name: "Tài khoản", href: "/admin/users" },
+  { name: "Đánh giá", href: "/admin/evalute" },
+
   //   { name: "Menu", href: "/pages/menu" },
   //   { name: "Product", href: "/pages/products" },
   //   { name: "Contact", href: "/pages/contact" },
