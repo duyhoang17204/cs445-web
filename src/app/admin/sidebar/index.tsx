@@ -7,10 +7,8 @@ const menuItems = [
   { name: "Sản Phẩm", href: "/admin/products" },
   { name: "Danh mục", href: "/admin/categories" },
   { name: "Tài khoản", href: "/admin/users" },
-  //   { name: "Menu", href: "/pages/menu" },
+  { name: "Đơn hàng", href: "/admin/order" },
   //   { name: "Product", href: "/pages/products" },
-  //   { name: "Contact", href: "/pages/contact" },
-  //   { name: "Evaluate", href: "/pages/reviews" },
 ];
 const Sidebar = () => {
   const pathname = usePathname();

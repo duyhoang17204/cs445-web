@@ -1,16 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import HeaderAdmin from "../components/header";
-import FormField from "@/app/component/form-field";
 import CategoryService from "@/app/api/categories";
 import { formatLocalTime } from "../../../../utils/common";
+import BuyProductService from "@/app/api/buy-products";
 
 const CategoriesAdmin = () => {
-  const [categoryForm, setCategoryForm] = useState({
-    key: "",
-    name: "",
-  });
-  const [categories, setCategories] = useState([]);
+  const [order, setOrder] = useState([]);
 
   useEffect(() => {
     getCagtegories();
@@ -18,20 +14,11 @@ const CategoriesAdmin = () => {
 
   const getCagtegories = async () => {
     try {
-      const res: any = await CategoryService.getAll();
+      const res: any = await BuyProductService.getAll();
       if (res) {
-        setCategories(res);
+        setOrder(res);
       }
     } catch (error) {}
-  };
-
-  const handleSubmit = async () => {
-    try {
-      await CategoryService.create(categoryForm);
-      getCagtegories();
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleDelete = async (e: any) => {
@@ -41,8 +28,8 @@ const CategoriesAdmin = () => {
           id: e._id,
         },
       });
-      const _data = categories.filter((val: any) => val._id !== e._id);
-      setCategories(_data);
+      const _data = order.filter((val: any) => val._id !== e._id);
+      setOrder(_data);
     } catch (error) {}
   };
 
@@ -51,35 +38,7 @@ const CategoriesAdmin = () => {
       <HeaderAdmin />
       <div className="px-3 py-4 flex flex-col gap-y-4">
         <div className="py-3">Trang sản phẩm</div>
-        {/* <div className="flex gap-x-2 ">
-          <div className="w-full flex gap-x-2">
-            <FormField
-              value={categoryForm.key}
-              onChange={(value) =>
-                setCategoryForm((prev) => ({ ...prev, key: value }))
-              }
-              wrapperClass="w-1/2 !bg-none border border-1 rounded-md"
-              customClass="bg-white text-black"
-              placeholder="key"
-            />
-            <FormField
-              value={categoryForm.name}
-              onChange={(value) =>
-                setCategoryForm((prev) => ({ ...prev, name: value }))
-              }
-              wrapperClass="w-1/2 !bg-none border border-1 rounded-md"
-              customClass="bg-white text-black"
-              placeholder="Tên sản phẩm"
-            />
-          </div>
 
-          <button
-            className="rounded-full bg-[#A8792B] text-white px-3 whitespace-nowrap"
-            onClick={handleSubmit}
-          >
-            Tạo mới sản phẩm
-          </button>
-        </div> */}
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 text-sm text-left">
             {}
@@ -102,14 +61,14 @@ const CategoriesAdmin = () => {
                 </th>
               </tr>
             </thead>
-            {categories.map((item: any, index: number) => (
+            {order.map((item: any, index: number) => (
               <tbody key={index}>
                 <tr className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b border-gray-200">
                     {index + 1}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
-                    {item.name}
+                    {item.name_product}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">Admin</td>
                   <td className="px-4 py-2 border-b border-gray-200">
