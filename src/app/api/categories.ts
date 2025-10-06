@@ -25,6 +25,18 @@ const getAll = () =>
       .catch(parseErrorResponse)
       .then(rj);
   });
+const update = (req: { params: { id: string }; body: any }) =>
+  new Promise((resolve, reject) => {
+    request()
+      .put("/categories/" + req.params.id, req.body)
+      .then((res) => {
+        const { data } = res.data;
+        if (data) resolve(data);
+        else reject(new Error("Something went error"));
+      })
+      .catch(parseErrorResponse)
+      .then(reject);
+  });
 
 const deleted = (req: { params: { id: string } }) =>
   new Promise((resolve, reject) => {
@@ -45,5 +57,6 @@ const CategoryService = {
   create,
   getAll,
   deleted,
+  update,
 };
 export default CategoryService;

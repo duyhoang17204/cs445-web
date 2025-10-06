@@ -4,9 +4,7 @@ import HeaderAdmin from "../components/header";
 import FormField from "@/app/component/form-field";
 import ProductService from "@/app/api/products";
 import CategoryService from "@/app/api/categories";
-import { MultiSelect } from "primereact/multiselect";
 import { Dropdown } from "primereact/dropdown";
-import { on } from "events";
 import { formatLocalTime } from "../../../../utils/common";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -21,6 +19,7 @@ const Page = () => {
     image: "",
   });
   const [categories, setCategories] = useState([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     getCategory();
@@ -34,11 +33,12 @@ const Page = () => {
           category_id: "",
         },
       });
-      console.log(res);
       if (res) {
         setProducts(res);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getCategory = async () => {
@@ -51,13 +51,40 @@ const Page = () => {
       console.log(error);
     }
   };
+
+  // ✅ Hàm tạo mới hoặc cập nhật
   const handleSubmit = async () => {
     try {
-      await ProductService.create(productForm);
+      if (editingId) {
+        await ProductService.update(editingId, productForm);
+        setEditingId(null);
+      } else {
+        await ProductService.create(productForm);
+      }
+
+      // Reset form
+      setProductForm({
+        name: "",
+        price: "",
+        category_id: "",
+        image: "",
+      });
+
       getProducts();
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // ✅ Khi bấm nút UPDATE
+  const handleEdit = (item: any) => {
+    setProductForm({
+      name: item.name,
+      price: item.price,
+      category_id: item.category_id,
+      image: item.image,
+    });
+    setEditingId(item._id);
   };
 
   const onFilter = (name: string, value: string) => {
@@ -71,7 +98,9 @@ const Page = () => {
     <div className="w-full">
       <HeaderAdmin />
       <div className="px-3 py-4 flex flex-col gap-y-2">
-        <div className="py-3">Trang sản phẩm</div>
+        <div className="py-3 text-lg font-semibold">Trang sản phẩm</div>
+
+        {/* Form nhập sản phẩm */}
         <div className="flex gap-x-2 w-full ">
           <div className="flex gap-x-2 w-full">
             <FormField
@@ -79,7 +108,7 @@ const Page = () => {
               onChange={(value) =>
                 setProductForm((prev) => ({ ...prev, name: value }))
               }
-              wrapperClass="w-1/3 !bg-none border border-1 rounded-md"
+              wrapperClass="w-1/3 border rounded-md"
               customClass="bg-white text-black"
               placeholder="Tên sản phẩm"
             />
@@ -88,7 +117,7 @@ const Page = () => {
               onChange={(value) =>
                 setProductForm((prev) => ({ ...prev, price: value }))
               }
-              wrapperClass="w-1/3 !bg-none border border-1 rounded-md"
+              wrapperClass="w-1/3 border rounded-md"
               customClass="bg-white text-black"
               placeholder="Giá"
             />
@@ -97,7 +126,7 @@ const Page = () => {
               onChange={(value) =>
                 setProductForm((prev) => ({ ...prev, image: value }))
               }
-              wrapperClass="w-1/3 !bg-none border border-1 rounded-md"
+              wrapperClass="w-1/3 border rounded-md"
               customClass="bg-white text-black"
               placeholder="Image Url"
             />
@@ -116,34 +145,27 @@ const Page = () => {
             className="rounded-full bg-[#A8792B] text-white px-3 whitespace-nowrap"
             onClick={handleSubmit}
           >
-            Tạo mới sản phẩm
+            {editingId ? "Cập nhật sản phẩm" : "Tạo mới sản phẩm"}
           </button>
         </div>
+
+        {/* Bảng sản phẩm */}
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 text-sm text-left">
-            {}
             <thead className="bg-[#5C3B0E] text-white">
               <tr>
-                <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  ID
-                </th>
-                <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
+                <th className="px-4 py-2 border-b border-gray-300">#</th>
+                <th className="px-4 py-2 border-b border-gray-300">
                   Tên sản phẩm
                 </th>
-                <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  Giá
-                </th>
-                <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  Danh mục
-                </th>
-                <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  Tùy chọn
-                </th>
+                <th className="px-4 py-2 border-b border-gray-300">Giá</th>
+                <th className="px-4 py-2 border-b border-gray-300">Danh mục</th>
+                <th className="px-4 py-2 border-b border-gray-300">Tùy chọn</th>
               </tr>
             </thead>
-            {products.map((item: any, index: number) => (
-              <tbody key={index}>
-                <tr className="hover:bg-gray-50">
+            <tbody>
+              {products.map((item: any, index: number) => (
+                <tr key={item._id} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b border-gray-200">
                     {index + 1}
                   </td>
@@ -158,20 +180,23 @@ const Page = () => {
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
                     <div className="flex gap-x-2">
-                      <button className="border border-blue-500 p-1 rounded-md text-blue-500">
+                      <button
+                        className="border border-blue-500 p-1 rounded-md text-blue-500"
+                        onClick={() => handleEdit(item)}
+                      >
                         UPDATE
                       </button>
                       <button
                         className="border border-red-500 p-1 rounded-md text-red-500"
-                        // onClick={(e) => handleDelete(item)}
+                        // onClick={() => handleDelete(item)}
                       >
                         DELETE
                       </button>
                     </div>
                   </td>
                 </tr>
-              </tbody>
-            ))}
+              ))}
+            </tbody>
           </table>
         </div>
       </div>

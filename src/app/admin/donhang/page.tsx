@@ -6,68 +6,52 @@ import CategoryService from "@/app/api/categories";
 import { formatLocalTime } from "../../../../utils/common";
 
 const CategoriesAdmin = () => {
-  const [categoryForm, setCategoryForm] = useState({ key: "", name: "" });
+  const [categoryForm, setCategoryForm] = useState({
+    key: "",
+    name: "",
+  });
   const [categories, setCategories] = useState([]);
-  const [editingCategory, setEditingCategory] = useState<any>(null); // lưu category đang edit
 
   useEffect(() => {
-    getCategories();
+    getCagtegories();
   }, []);
 
-  const getCategories = async () => {
+  const getCagtegories = async () => {
     try {
       const res: any = await CategoryService.getAll();
-      if (res) setCategories(res);
-    } catch (error) {
-      console.log(error);
-    }
+      if (res) {
+        setCategories(res);
+      }
+    } catch (error) {}
   };
 
   const handleSubmit = async () => {
     try {
-      if (editingCategory) {
-        // update category
-        await CategoryService.update({
-          params: { id: editingCategory._id },
-          body: categoryForm,
-        });
-        setEditingCategory(null);
-      } else {
-        // create mới
-        await CategoryService.create(categoryForm);
-      }
-      setCategoryForm({ key: "", name: "" });
-      getCategories();
+      await CategoryService.create(categoryForm);
+      getCagtegories();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDelete = async (item: any) => {
+  const handleDelete = async (e: any) => {
     try {
-      await CategoryService.deleted({ params: { id: item._id } });
-      setCategories(categories.filter((val: any) => val._id !== item._id));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const startEditing = (item: any) => {
-    setEditingCategory(item);
-    setCategoryForm({ key: item.key, name: item.name });
-  };
-
-  const cancelEditing = () => {
-    setEditingCategory(null);
-    setCategoryForm({ key: "", name: "" });
+      await CategoryService.deleted({
+        params: {
+          id: e._id,
+        },
+      });
+      const _data = categories.filter((val: any) => val._id !== e._id);
+      setCategories(_data);
+    } catch (error) {}
   };
 
   return (
     <div>
       <HeaderAdmin />
       <div className="px-3 py-4 flex flex-col gap-y-4">
-        <div className="py-3">Trang danh mục</div>
-        <div className="flex gap-x-2 ">
+        <div className="py-3">Trang sản phẩm</div>
+        {/* <div className="flex gap-x-2 ">
           <div className="w-full flex gap-x-2">
             <FormField
               value={categoryForm.key}
@@ -85,49 +69,42 @@ const CategoriesAdmin = () => {
               }
               wrapperClass="w-1/2 !bg-none border border-1 rounded-md"
               customClass="bg-white text-black"
-              placeholder="Tên danh mục"
+              placeholder="Tên sản phẩm"
             />
           </div>
+
           <button
             className="rounded-full bg-[#A8792B] text-white px-3 whitespace-nowrap"
             onClick={handleSubmit}
           >
-            {editingCategory ? "Cập nhật danh mục" : "Tạo mới danh mục"}
+            Tạo mới sản phẩm
           </button>
-          {editingCategory && (
-            <button
-              className="rounded-full bg-gray-400 text-white px-3 whitespace-nowrap"
-              onClick={cancelEditing}
-            >
-              Hủy
-            </button>
-          )}
-        </div>
-
+        </div> */}
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 text-sm text-left">
+            {}
             <thead className="bg-[#5C3B0E] text-white">
               <tr>
                 <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  ID
+                  User ID
                 </th>
                 <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  Tên danh mục
+                  Tên đơn hàng
                 </th>
                 <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  Được tạo bởi
+                  Ngày
                 </th>
                 <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
-                  Ngày tạo
+                  ID Sản Phẩm
                 </th>
                 <th className="px-4 py-2 border-b border-gray-300 whitespace-nowrap">
                   Tùy chọn
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {categories.map((item: any, index: number) => (
-                <tr key={item._id} className="hover:bg-gray-50">
+            {categories.map((item: any, index: number) => (
+              <tbody key={index}>
+                <tr className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b border-gray-200">
                     {index + 1}
                   </td>
@@ -140,23 +117,20 @@ const CategoriesAdmin = () => {
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
                     <div className="flex gap-x-2">
-                      <button
-                        className="border border-blue-500 p-1 rounded-md text-blue-500"
-                        onClick={() => startEditing(item)}
-                      >
+                      <button className="border border-blue-500 p-1 rounded-md text-blue-500">
                         UPDATE
                       </button>
                       <button
                         className="border border-red-500 p-1 rounded-md text-red-500"
-                        onClick={() => handleDelete(item)}
+                        onClick={(e) => handleDelete(item)}
                       >
                         DELETE
                       </button>
                     </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
+              </tbody>
+            ))}
           </table>
         </div>
       </div>
