@@ -32,8 +32,6 @@ const UserDropdown = () => {
     router.push("/");
   };
 
-  console.log(auth);
-
   return (
     <div className="relative" ref={dropdownRef}>
       {token ? (

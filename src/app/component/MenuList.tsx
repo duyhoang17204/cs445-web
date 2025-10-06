@@ -14,16 +14,19 @@ interface Product {
   status: string;
 }
 
-export default function MenuList() {
+interface MenuListProps {
+  selectedCategory: string;
+}
+
+export default function MenuList({ selectedCategory }: MenuListProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Lấy dữ liệu sản phẩm
   const getProducts = async () => {
     try {
       const res: any = await ProductService.getAll({
         query: {
-          category_id: "cafe",
+          category_id: selectedCategory || "",
         },
       });
       setProducts(res || []);

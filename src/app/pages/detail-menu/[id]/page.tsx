@@ -6,9 +6,10 @@ import Image from "next/image";
 import Loading from "@/app/component/Loading";
 import ButtonPay from "@/app/component/ButtonPay";
 import ButtonAdd from "@/app/component/ButtonAdd";
+import ProductService from "@/app/api/products";
 
 interface Item {
-  id: number;
+  _id: string;
   name: string;
   price?: string;
   image?: string;
@@ -21,21 +22,24 @@ export default function Page() {
   const [unitPrice, setUnitPrice] = useState<number>(0);
 
   useEffect(() => {
-    async function fetchData() {
-      const res = await fetch(`/api/menu`);
-      const data = await res.json();
-
-      const list = data.menu;
-      const found = list.find((i: Item) => i.id === Number(id));
-      if (found) {
-        setItem(found);
-
-        const priceNum = Number(found.price?.replace(/[^\d]/g, "")) || 0;
-        setUnitPrice(priceNum);
-      }
-    }
-    fetchData();
+    if (id) getProduct();
   }, [id]);
+
+  const getProduct = async () => {
+    try {
+      const res: any = await ProductService.getProductById({
+        params: { id },
+      });
+
+      if (!res) return;
+
+      setItem(res);
+      const priceNum = Number(res.price?.replace(/[^\d]/g, "")) || 0;
+      setUnitPrice(priceNum);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (!item) return <Loading />;
 
@@ -59,9 +63,10 @@ export default function Page() {
         <h1 className="text-[40px] text-[#452F0B] font-semibold mb-4">
           {item.name}
         </h1>
-        {item.id && (
+
+        {item._id && (
           <p className="text-2xl text-[#452F0B] font-medium mb-6">
-            Mã sản phẩm: {item.id}
+            Mã sản phẩm: {item._id}
           </p>
         )}
 

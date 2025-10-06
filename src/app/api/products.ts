@@ -35,7 +35,20 @@ const update = (id: string, payload: any) =>
       .then((res) => {
         const { data } = res.data;
         if (data) rs(data);
-        else rj(new Error("Something went wrong!"));
+        else rj(new Error("Something went error!"));
+      })
+      .catch(parseErrorResponse)
+      .then(rj);
+  });
+
+const getProductById = (req: any) =>
+  new Promise((rs, rj) => {
+    request()
+      .get(`/products/${req.params.id}`)
+      .then((res) => {
+        const { data } = res.data;
+        if (data) rs(data);
+        else rj(new Error("Something went error!"));
       })
       .catch(parseErrorResponse)
       .then(rj);
@@ -45,5 +58,6 @@ const ProductService = {
   create,
   getAll,
   update,
+  getProductById,
 };
 export default ProductService;
