@@ -29,7 +29,12 @@ const Page = () => {
 
   const getProducts = async () => {
     try {
-      const res: any = await ProductService.getAll();
+      const res: any = await ProductService.getAll({
+        query: {
+          category_id: "",
+        },
+      });
+      console.log(res);
       if (res) {
         setProducts(res);
       }
@@ -49,6 +54,7 @@ const Page = () => {
   const handleSubmit = async () => {
     try {
       await ProductService.create(productForm);
+      getProducts();
     } catch (error) {
       console.log(error);
     }
@@ -100,7 +106,7 @@ const Page = () => {
               value={productForm.category_id}
               options={categories.map((item: any) => ({
                 label: item.name,
-                value: item.name,
+                value: item.key,
               }))}
               onChange={(e) => onFilter("category_id", e.value)}
               placeholder="Chọn danh mục"

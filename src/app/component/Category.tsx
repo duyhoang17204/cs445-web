@@ -1,27 +1,47 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
+import ProductService from "../api/products";
+import CategoryService from "../api/categories";
 
 interface CategoryProps {
   onSelect: (category: string) => void;
 }
 
 export default function Category({ onSelect }: CategoryProps) {
-  const [category, setCategory] = useState<string[]>([]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const getCategory = async () => {
+    try {
+      const res: any = await CategoryService.getAll();
+      if (res) {
+        setCategories(res);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getProducts = async () => {
+    try {
+      const res: any = await ProductService.getAll({
+        query: {
+          category_id: "",
+        },
+      });
+      if (res) {
+        setProducts(res);
+      }
+    } catch (error) {}
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await fetch("/api/category");
-      const data = await res.json();
-      setCategory(data.category);
-    };
-
-    fetchCategories();
+    getCategory();
+    getProducts();
   }, []);
-
   return (
     <div className="flex flex-col gap-3 mt-10">
-      {category.map((item, index) => (
+      {categories.map((item: any, index) => (
         <div
           key={index}
           onClick={() => onSelect(item)}
@@ -29,7 +49,7 @@ export default function Category({ onSelect }: CategoryProps) {
                         hover:bg-[#774d12] transition-colors
           "
         >
-          {item}
+          {item.name}
         </div>
       ))}
     </div>

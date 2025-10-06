@@ -3,44 +3,49 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Loading from "@/app/component/Loading";
 import Image from "next/image";
+import ProductService from "../api/products";
+
 interface Product {
-  id: number;
+  _id: string;
   name: string;
   price: string;
   image: string;
-  category: string;
+  category_id: string;
+  status: string;
 }
 
 export default function MenuList() {
-  const [menu, setMenu] = useState<Product[]>([]);
-
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Lấy dữ liệu sản phẩm
+  const getProducts = async () => {
+    try {
+      const res: any = await ProductService.getAll({
+        query: {
+          category_id: "cafe",
+        },
+      });
+      setProducts(res || []);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/menu");
-        if (!res.ok) throw new Error("API error: " + res.status);
-        const data = await res.json();
-        console.log("API data:", data);
-        setMenu(data.menu ?? []);
-      } catch (err) {
-        console.error("Fetch failed:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMenu();
+    getProducts();
   }, []);
 
   if (loading) return <Loading />;
 
-  const grouped = menu.reduce((acc: Record<string, Product[]>, menu) => {
-    if (!acc[menu.category]) {
-      acc[menu.category] = [];
+  const grouped = products.reduce((acc: Record<string, Product[]>, product) => {
+    if (!acc[product.category_id]) {
+      acc[product.category_id] = [];
     }
-    acc[menu.category].push(menu);
+    acc[product.category_id].push(product);
     return acc;
   }, {});
 
@@ -48,22 +53,28 @@ export default function MenuList() {
     <div className="space-y-8">
       {Object.entries(grouped).map(([category, items]) => (
         <div key={category} id={category}>
-          <h2 className="text-[40px] text-[#5B3B0E]  font-medium mr-2.5 mb-4">
+          <h2 className="text-[40px] text-[#5B3B0E] font-medium mr-2.5 mb-4">
             {category}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-8">
             {items.map((product) => (
-              <Link key={product.id} href={`/pages/detail-menu/${product.id}`}>
-                <div className=" flex flex-col items-center">
-                  <Image
-                    src={product.image}
+              <Link
+                key={product._id}
+                href={`/pages/detail-menu/${product._id}`}
+              >
+                <div className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform">
+                  {/* <Image
+                    src={product?.image || "/images/no-image.png"}
                     alt={product.name}
                     className="w-[250px] h-[295px] object-cover mb-2 rounded-md"
                     width={250}
                     height={295}
-                  />
+                  /> */}
+                  <img src={product.image} width={250} height={295} alt="" />
                   <h3 className="font-medium">{product.name}</h3>
-                  <p className="text-gray-600">{product.price}</p>
+                  <p className="text-gray-600">
+                    {Number(product.price).toLocaleString()}₫
+                  </p>
                 </div>
               </Link>
             ))}

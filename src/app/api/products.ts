@@ -1,4 +1,5 @@
 import { parseErrorResponse, request } from "./request";
+import qs from "query-string";
 
 const create = (payload: any) =>
   new Promise((rs, rj) => {
@@ -13,10 +14,11 @@ const create = (payload: any) =>
       .then(rj);
   });
 
-const getAll = () =>
+const getAll = (req: any) =>
   new Promise((rs, rj) => {
+    const query = qs.stringify(req.query);
     request()
-      .get(`/products/`)
+      .get(`/products/?${query}`)
       .then((res) => {
         const { data } = res.data;
         if (data) rs(data);
