@@ -76,7 +76,6 @@ const Page = () => {
     }
   };
 
-  // ✅ Khi bấm nút UPDATE
   const handleEdit = (item: any) => {
     setProductForm({
       name: item.name,

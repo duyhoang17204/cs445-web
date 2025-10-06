@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Loading from "@/app/component/Loading";
 import ButtonPay from "@/app/component/ButtonPay";
 import ButtonAdd from "@/app/component/ButtonAdd";
 import ProductService from "@/app/api/products";
+import dynamic from "next/dynamic";
 
 interface Item {
   _id: string;
@@ -15,7 +16,8 @@ interface Item {
   image?: string;
 }
 
-export default function Page() {
+function Page() {
+  const router = useRouter();
   const { id } = useParams();
   const [item, setItem] = useState<Item | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -30,9 +32,7 @@ export default function Page() {
       const res: any = await ProductService.getProductById({
         params: { id },
       });
-
       if (!res) return;
-
       setItem(res);
       const priceNum = Number(res.price?.replace(/[^\d]/g, "")) || 0;
       setUnitPrice(priceNum);
@@ -44,9 +44,23 @@ export default function Page() {
   if (!item) return <Loading />;
 
   const totalPrice = unitPrice * quantity;
-
   const formatPrice = (price: number) =>
     price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+
+  const handlePay = () => {
+    localStorage.setItem(
+      "orderData",
+      JSON.stringify({
+        id: item._id,
+        name: item.name,
+        price: item.price,
+        image: item.image,
+        quantity,
+        totalPrice,
+      })
+    );
+    router.push("/pages/pay");
+  };
 
   return (
     <div className="flex justify-center gap-20 w-full mx-auto p-6 bg-[#D9CEBC]">
@@ -94,9 +108,17 @@ export default function Page() {
 
         <div className="flex flex-col gap-10">
           <ButtonAdd />
-          <ButtonPay />
+          <button
+            onClick={handlePay}
+            className="w-[225px] h-[72px] rounded-[50px] text-4xl font-normal
+              text-[#D9CEBC] bg-[#5B3B0E] hover:bg-[#A8792B]"
+          >
+            Thanh toán
+          </button>
         </div>
       </div>
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(Page), { ssr: false });

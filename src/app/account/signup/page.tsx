@@ -54,7 +54,7 @@ const SignUp = () => {
         notify("Đăng ký thành công!", "success");
         setSignUpSuccessfully(true);
         alert("Đăng kí tài khoản thành công");
-        router.push("/");
+        router.push("/pages/home");
       } catch (error) {
         notify("Email đã tồn tại trên hệ thống.", "error");
       }
