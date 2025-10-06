@@ -18,7 +18,7 @@ export default function NavBar() {
     { name: "Menu", href: "/pages/menu" },
     { name: "Product", href: "/pages/products" },
     { name: "Contact", href: "/pages/contact" },
-    { name: "Evaluate", href: "/pages/reviews" },
+    { name: "Evaluate", href: "/pages/evaluate" },
   ];
 
   useEffect(() => {
