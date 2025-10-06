@@ -18,6 +18,7 @@ const Page = () => {
     name: "",
     price: "",
     category_id: "",
+    image: "",
   });
   const [categories, setCategories] = useState([]);
 
@@ -84,6 +85,15 @@ const Page = () => {
               wrapperClass="w-1/3 !bg-none border border-1 rounded-md"
               customClass="bg-white text-black"
               placeholder="Giá"
+            />
+            <FormField
+              value={productForm.image}
+              onChange={(value) =>
+                setProductForm((prev) => ({ ...prev, image: value }))
+              }
+              wrapperClass="w-1/3 !bg-none border border-1 rounded-md"
+              customClass="bg-white text-black"
+              placeholder="Image Url"
             />
             <Dropdown
               className="w-1/3 border rounded-md px-2 flex items-center "
