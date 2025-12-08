@@ -16,7 +16,7 @@ export default function Menu() {
 
   return (
     <div className="bg-[#D9CEBC] px-20 pt-8 pb-40">
-      <div className="flex justify-center gap-80">
+      <div className="flex justify-center gap-40">
         <Category onSelect={handleScroll} />
         <MenuList selectedCategory={selectedCategory} />
       </div>

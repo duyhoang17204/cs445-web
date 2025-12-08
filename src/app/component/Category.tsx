@@ -37,9 +37,7 @@ export default function Category({ onSelect }: CategoryProps) {
         <div
           key={index}
           onClick={(e: any) => handleChangeTab(item.key)}
-          className="bg-[#5B3B0E] cursor-pointer text-[#D9CEBC] text-[40px] px-4  rounded-r-[40px] w-fit h-[64px] shadow-[0_4px_4px_rgba(0,0,0,0.4)]
-                        hover:bg-[#774d12] transition-colors
-          "
+          className="bg-[#5B3B0E] cursor-pointer text-[#D9CEBC] text-[40px] px-4  rounded-r-[40px] w-fit h-[64px] shadow-[0_4px_4px_rgba(0,0,0,0.4)]  hover:bg-[#774d12] transition-colors uppercase"
         >
           {item.name}
         </div>

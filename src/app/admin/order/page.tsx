@@ -76,9 +76,6 @@ const CategoriesAdmin = () => {
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200">
                     <div className="flex gap-x-2">
-                      <button className="border border-blue-500 p-1 rounded-md text-blue-500">
-                        UPDATE
-                      </button>
                       <button
                         className="border border-red-500 p-1 rounded-md text-red-500"
                         onClick={(e) => handleDelete(item)}

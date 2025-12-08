@@ -54,10 +54,26 @@ const getProductById = (req: any) =>
       .then(rj);
   });
 
+const deleted = (req: { params: { id: string } }) =>
+  new Promise((resolve, reject) => {
+    request()
+      .delete("/products/" + req.params.id)
+      .then((res) => {
+        const { data } = res.data;
+        if (data) resolve(data);
+        else {
+          reject(new Error("Something went error"));
+        }
+      })
+      .catch(parseErrorResponse)
+      .then(reject);
+  });
+
 const ProductService = {
   create,
   getAll,
   update,
   getProductById,
+  deleted,
 };
 export default ProductService;

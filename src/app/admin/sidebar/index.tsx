@@ -1,21 +1,24 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const menuItems = [
   { name: "Sản Phẩm", href: "/admin/products" },
   { name: "Danh mục", href: "/admin/categories" },
   { name: "Tài khoản", href: "/admin/users" },
   { name: "Đánh giá", href: "/admin/evalute" },
-
-  //   { name: "Menu", href: "/pages/menu" },
   { name: "Đơn hàng", href: "/admin/order" },
-  //   { name: "Product", href: "/pages/products" },
 ];
 const Sidebar = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (pathname === "/admin") {
+      router.push("/admin/products");
+    }
+  }, []);
   return (
     <div className="h-screen bg-[#E6E7EB] w-[300px] p-4">
       <div className="text-xl text-black flex items-center mb-2">TAN CAFE</div>

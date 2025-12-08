@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -56,7 +57,7 @@ export default function MenuList({ selectedCategory }: MenuListProps) {
     <div className="space-y-8">
       {Object.entries(grouped).map(([category, items]) => (
         <div key={category} id={category}>
-          <h2 className="text-[40px] text-[#5B3B0E] font-medium mr-2.5 mb-4">
+          <h2 className="text-[40px] text-[#5B3B0E] font-medium mr-2.5 mb-4 uppercase">
             {category}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-20 gap-y-8">
@@ -65,7 +66,7 @@ export default function MenuList({ selectedCategory }: MenuListProps) {
                 key={product._id}
                 href={`/pages/detail-menu/${product._id}`}
               >
-                <div className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform">
+                <div className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-w-[250px] min-h-[250px] rounded-lg">
                   {/* <Image
                     src={product?.image || "/images/no-image.png"}
                     alt={product.name}
@@ -73,7 +74,13 @@ export default function MenuList({ selectedCategory }: MenuListProps) {
                     width={250}
                     height={295}
                   /> */}
-                  <img src={product.image} width={250} height={295} alt="" />
+                  <img
+                    src={product.image}
+                    className="rounded-lg"
+                    width={250}
+                    height={250}
+                    alt=""
+                  />
                   <h3 className="font-medium">{product.name}</h3>
                   <p className="text-gray-600">
                     {Number(product.price).toLocaleString()}₫

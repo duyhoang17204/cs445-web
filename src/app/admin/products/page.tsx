@@ -93,6 +93,20 @@ const Page = () => {
     }));
   };
 
+  const handleDelete = async (e: any) => {
+    try {
+      await ProductService.deleted({
+        params: {
+          id: e._id,
+        },
+      });
+      const _data = products.filter((val: any) => val._id !== e._id);
+      setProducts(_data);
+    } catch (error) {}
+  };
+
+  console.log(products);
+
   return (
     <div className="w-full">
       <HeaderAdmin />
@@ -187,7 +201,7 @@ const Page = () => {
                       </button>
                       <button
                         className="border border-red-500 p-1 rounded-md text-red-500"
-                        // onClick={() => handleDelete(item)}
+                        onClick={() => handleDelete(item)}
                       >
                         DELETE
                       </button>

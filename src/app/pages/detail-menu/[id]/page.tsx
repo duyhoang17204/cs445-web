@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Loading from "@/app/component/Loading";
-import ButtonPay from "@/app/component/ButtonPay";
 import ButtonAdd from "@/app/component/ButtonAdd";
 import ProductService from "@/app/api/products";
 import dynamic from "next/dynamic";
@@ -22,6 +21,7 @@ function Page() {
   const [item, setItem] = useState<Item | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [unitPrice, setUnitPrice] = useState<number>(0);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     if (id) getProduct();
@@ -60,6 +60,33 @@ function Page() {
       })
     );
     router.push("/pages/pay");
+  };
+  const handleAddToCart = () => {
+    const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+
+    const newItem = {
+      id: item._id,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      quantity,
+      totalPrice,
+    };
+
+    const existingIndex = existingCart.findIndex(
+      (p: any) => p.id === newItem.id
+    );
+
+    if (existingIndex !== -1) {
+      existingCart[existingIndex].quantity += quantity;
+      existingCart[existingIndex].totalPrice += totalPrice;
+    } else {
+      existingCart.push(newItem);
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(existingCart));
+
+    alert("🛒 Sản phẩm đã được thêm vào giỏ hàng!");
   };
 
   return (
@@ -107,7 +134,18 @@ function Page() {
         </div>
 
         <div className="flex flex-col gap-10">
-          <ButtonAdd />
+          <button
+            onClick={handleAddToCart}
+            className={`w-fit h-[72px] p-3.5 rounded-[50px] text-4xl font-normal transition-colors
+                 ${
+                   added
+                     ? "bg-[#F0C072] text-[#452F0B] "
+                     : "bg-[#5B3B0E] hover:bg-[#A8792B] text-[#D9CEBC] "
+                 } 
+                 `}
+          >
+            {added ? "Đã thêm vào giỏ hàng" : "Thêm vào giỏ hàng"}
+          </button>
           <button
             onClick={handlePay}
             className="w-[225px] h-[72px] rounded-[50px] text-4xl font-normal
